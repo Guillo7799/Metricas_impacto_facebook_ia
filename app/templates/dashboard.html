@@ -1,12 +1,53 @@
-<h1>Dashboard Facebook</h1>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Facebook Impact AI</title>
+  </head>
+  <body>
+    <h1>Dashboard de Impacto en Facebook</h1>
 
-<p>Total publicaciones: {{ total_publicaciones }}</p>
-<p>Alcance total: {{ alcance_total }}</p>
-<p>Engagement promedio: {{ engagement_promedio }}%</p>
-<p>Mejor publicación: {{ mejor_publicacion.producto }}</p>
+    <p>Total publicaciones: {{ total_publicaciones }}</p>
+    <p>Alcance total: {{ alcance_total }}</p>
+    <p>Engagement promedio: {{ engagement_promedio }}%</p>
+    <p>Mejor publicación: {{ mejor_publicacion.producto }}</p>
 
-<h2>Gráfico por producto</h2>
-{{ grafico_productos_html | safe }}
+    <h2>Gráfico por producto</h2>
+    {{ grafico_productos_html | safe }}
 
-<h2>Gráfico por tipo</h2>
-{{ grafico_tipos_html | safe }}
+    <h2>Clasificación de impacto</h2>
+    {{ grafico_impacto_html | safe }}
+
+    <h2>Recomendación inteligente</h2>
+    <p>{{ recomendacion }}</p>
+
+    <h2>Gráfico por tipo de contenido</h2>
+    {{ grafico_tipos_html | safe }}
+
+    <h2>Top 5 publicaciones</h2>
+
+    <table border="1">
+      <tr>
+        <th>Fecha</th>
+        <th>Producto</th>
+        <th>Tipo</th>
+        <th>Alcance</th>
+        <th>Interacciones</th>
+        <th>Engagement</th>
+        <th>Nivel de impacto</th>
+      </tr>
+
+      {% for post in top_publicaciones %}
+      <tr>
+        <td>{{ post.fecha }}</td>
+        <td>{{ post.producto }}</td>
+        <td>{{ post.tipo_contenido }}</td>
+        <td>{{ post.alcance }}</td>
+        <td>{{ post.interacciones }}</td>
+        <td>{{ "%.2f"|format(post.engagement) }}%</td>
+        <td>{{ post.nivel_impacto }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

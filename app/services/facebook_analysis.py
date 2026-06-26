@@ -4,7 +4,7 @@ import plotly.io as pio
 
 
 def cargar_datos():
-    df = pd.read_csv("data/publicaciones_facebook.csv")
+    df = pd.read_csv("data/dataset_Facebook.csv", sep=";")
 
     df["interacciones"] = (
         df["reacciones"] +
@@ -14,6 +14,12 @@ def cargar_datos():
     )
 
     df["engagement"] = (df["interacciones"] / df["alcance"]) * 100
+
+    df["nivel_impacto"] = pd.cut(
+        df["engagement"],
+        bins=[0, 20, 28, 100],
+        labels=["Bajo", "Medio", "Alto"]
+    )
 
     return df
 
@@ -30,25 +36,25 @@ def obtener_metricas_dashboard():
         ascending=False
     ).iloc[0]
 
-    interacciones_por_producto = (
-        df.groupby("producto")["interacciones"]
-        .sum()
-        .reset_index()
-    )
-
     grafico_productos = px.bar(
-        interacciones_por_producto,
+        df.groupby("producto")["interacciones"].sum().reset_index(),
         x="producto",
         y="interacciones",
         title="Interacciones por producto"
     )
 
-    grafico_tipos = px.pie(
+    grafico_impacto = px.pie(
         df,
-        names="tipo_contenido",
-        values="interacciones",
-        title="Impacto por tipo de contenido"
+        names="nivel_impacto",
+        title="Distribución de publicaciones por nivel de impacto"
     )
+
+    top_publicaciones = df.sort_values(
+        by="engagement",
+        ascending=False
+    ).head(5)
+
+    recomendacion = generar_recomendacion(df)
 
     return {
         "total_publicaciones": total_publicaciones,
@@ -56,9 +62,29 @@ def obtener_metricas_dashboard():
         "engagement_promedio": engagement_promedio,
         "mejor_publicacion": mejor_publicacion,
         "grafico_productos_html": pio.to_html(grafico_productos, full_html=False),
-        "grafico_tipos_html": pio.to_html(grafico_tipos, full_html=False),
-        "top_publicaciones": df.sort_values(
-            by="engagement",
-            ascending=False
-        ).head(5).to_dict(orient="records")
+        "grafico_impacto_html": pio.to_html(grafico_impacto, full_html=False),
+        "top_publicaciones": top_publicaciones.to_dict(orient="records"),
+        "recomendacion": recomendacion
     }
+
+
+def generar_recomendacion(df):
+    mejor_tipo = (
+        df.groupby("tipo_contenido")["engagement"]
+        .mean()
+        .sort_values(ascending=False)
+        .index[0]
+    )
+
+    mejor_producto = (
+        df.groupby("producto")["engagement"]
+        .mean()
+        .sort_values(ascending=False)
+        .index[0]
+    )
+
+    return (
+        f"El tipo de contenido con mejor rendimiento es '{mejor_tipo}'. "
+        f"El producto con mayor impacto promedio es '{mejor_producto}'. "
+        "Se recomienda priorizar este tipo de publicación en futuras campañas."
+    )
