@@ -1,0 +1,9 @@
+id,fecha,producto,tipo_contenido,alcance,reacciones,comentarios,compartidos,clics
+1,2026-06-01,Zapatos deportivos,imagen,1200,230,45,20,80
+2,2026-06-02,Camiseta básica,imagen,900,120,20,8,40
+3,2026-06-03,Mochila escolar,video,2500,410,90,55,160
+4,2026-06-04,Reloj digital,imagen,1500,260,35,18,95
+5,2026-06-05,Zapatos deportivos,video,3000,520,110,70,210
+6,2026-06-06,Camiseta básica,texto,600,70,10,3,15
+7,2026-06-07,Mochila escolar,imagen,1800,300,60,25,100
+8,2026-06-08,Reloj digital,video,2800,480,85,60,180
