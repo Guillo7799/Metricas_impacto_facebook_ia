@@ -6,5 +6,4 @@ main = Blueprint("main", __name__)
 @main.route("/")
 def dashboard():
     datos = obtener_metricas_dashboard()
-    print(datos)  # temporal para revisar en consola
     return render_template("dashboard.html", **datos)
