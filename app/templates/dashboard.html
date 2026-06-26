@@ -1,0 +1,12 @@
+<h1>Dashboard Facebook</h1>
+
+<p>Total publicaciones: {{ total_publicaciones }}</p>
+<p>Alcance total: {{ alcance_total }}</p>
+<p>Engagement promedio: {{ engagement_promedio }}%</p>
+<p>Mejor publicación: {{ mejor_publicacion.producto }}</p>
+
+<h2>Gráfico por producto</h2>
+{{ grafico_productos_html | safe }}
+
+<h2>Gráfico por tipo</h2>
+{{ grafico_tipos_html | safe }}
