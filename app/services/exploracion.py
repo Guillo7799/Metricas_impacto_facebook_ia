@@ -60,6 +60,7 @@ def generar_graficos_eda():
     correlaciones = (
         columnas_numericas
         .corr()["Total Interactions"]
+        .drop(labels=["Total Interactions"], errors="ignore")
         .sort_values(ascending=False)
         .reset_index()
     )
