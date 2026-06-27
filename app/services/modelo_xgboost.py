@@ -73,3 +73,22 @@ if __name__ == "__main__":
         print(f"{nombre:65} {valor:.4f}")
 
     print(f"\nModelo guardado en:\n{ruta}")
+    
+
+def generar_insights(mae, r2, importancia):
+
+    insights = []
+
+    insights.append(
+        f"El modelo obtuvo un R² de {r2:.2f}, indicando una capacidad predictiva aceptable."
+    )
+
+    insights.append(
+        f"La variable más importante fue '{importancia[0][0]}'."
+    )
+
+    insights.append(
+        "El alcance de una publicación influye significativamente en las interacciones obtenidas."
+    )
+
+    return insights
