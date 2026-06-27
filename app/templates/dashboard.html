@@ -13,7 +13,9 @@
   <body class="bg-light">
     <div class="container py-4">
       <div class="text-center mb-4">
-        <h1 class="fw-bold">Facebook Performance Analytics Dashboard</h1>
+        <h1 class="fw-bold">
+          Dashboard de Análisis de Impacto de Publicaciones en Facebook
+        </h1>
         <p class="text-muted">
           Predicción del impacto de publicaciones mediante XGBoost
         </p>
@@ -23,7 +25,7 @@
         <div class="col-md-3">
           <div class="card shadow-sm">
             <div class="card-body">
-              <p class="text-muted mb-1">Publicaciones</p>
+              <p class="text-muted mb-1">Publicaciones analizadas</p>
               <h3>{{ resumen.total_registros }}</h3>
             </div>
           </div>
@@ -32,7 +34,7 @@
         <div class="col-md-3">
           <div class="card shadow-sm">
             <div class="card-body">
-              <p class="text-muted mb-1">MAE</p>
+              <p class="text-muted mb-1">Error MAE</p>
               <h3>{{ mae }}</h3>
             </div>
           </div>
@@ -41,7 +43,7 @@
         <div class="col-md-3">
           <div class="card shadow-sm">
             <div class="card-body">
-              <p class="text-muted mb-1">RMSE</p>
+              <p class="text-muted mb-1">Error RMSE</p>
               <h3>{{ rmse }}</h3>
             </div>
           </div>
@@ -50,7 +52,7 @@
         <div class="col-md-3">
           <div class="card shadow-sm">
             <div class="card-body">
-              <p class="text-muted mb-1">R²</p>
+              <p class="text-muted mb-1">R² del modelo</p>
               <h3>{{ r2 }}</h3>
             </div>
           </div>
@@ -87,26 +89,7 @@
       </div>
 
       <div class="card shadow-sm my-4">
-        <div class="card-body">
-          <h4>Top 10 variables importantes - XGBoost</h4>
-
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Variable</th>
-                <th>Importancia</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for variable, valor in importancia %}
-              <tr>
-                <td>{{ variable }}</td>
-                <td>{{ "%.4f"|format(valor) }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+        <div class="card-body">{{ grafico_importancia | safe }}</div>
       </div>
 
       <div class="card shadow-sm my-4">
@@ -120,6 +103,16 @@
           </ul>
         </div>
       </div>
+
+      <footer class="text-center mt-5 mb-4 text-muted">
+        <hr />
+        <p class="mb-1"><strong>Proyecto Integrador</strong></p>
+        <p class="mb-1">Ciencia de Datos e Inteligencia Artificial</p>
+        <p class="mb-1">Universidad de Las Américas</p>
+        <p class="mb-1">Guillermo Rivera - Sebastián Poveda - Armando Brito</p>
+        <p class="mb-1">Dataset: UCI Facebook Metrics</p>
+        <p class="mb-1">Modelo predictivo: XGBoost Regressor</p>
+      </footer>
     </div>
   </body>
 </html>

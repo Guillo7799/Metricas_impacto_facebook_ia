@@ -11,6 +11,34 @@ def obtener_dataset_limpio():
     return df
 
 
+def traducir_valores_dashboard(df):
+    df = df.copy()
+
+    df["Type"] = df["Type"].replace({
+        "Photo": "Foto",
+        "Status": "Estado",
+        "Link": "Enlace",
+        "Video": "Video"
+    })
+
+    df["Paid"] = df["Paid"].replace({
+        0: "Orgánica",
+        1: "Pagada"
+    })
+
+    df["Post Weekday"] = df["Post Weekday"].replace({
+        1: "Lunes",
+        2: "Martes",
+        3: "Miércoles",
+        4: "Jueves",
+        5: "Viernes",
+        6: "Sábado",
+        7: "Domingo"
+    })
+
+    return df
+
+
 def generar_resumen_eda(df):
     resumen = {
         "total_registros": len(df),
@@ -25,37 +53,10 @@ def generar_resumen_eda(df):
 
 
 def generar_graficos_eda():
-    df = obtener_dataset_limpio()
+    df_original = obtener_dataset_limpio()
+    resumen = generar_resumen_eda(df_original)
 
-    grafico_tipos = px.bar(
-        df.groupby("Type")["Total Interactions"].mean().reset_index(),
-        x="Type",
-        y="Total Interactions",
-        title="Promedio de interacciones por tipo de publicación"
-    )
-
-    grafico_paid = px.bar(
-        df.groupby("Paid")["Total Interactions"].mean().reset_index(),
-        x="Paid",
-        y="Total Interactions",
-        title="Promedio de interacciones: pagadas vs orgánicas"
-    )
-
-    grafico_hora = px.line(
-        df.groupby("Post Hour")["Total Interactions"].mean().reset_index(),
-        x="Post Hour",
-        y="Total Interactions",
-        title="Promedio de interacciones por hora de publicación"
-    )
-
-    grafico_dia = px.bar(
-        df.groupby("Post Weekday")["Total Interactions"].mean().reset_index(),
-        x="Post Weekday",
-        y="Total Interactions",
-        title="Promedio de interacciones por día de la semana"
-    )
-
-    columnas_numericas = df.select_dtypes(include=["int64", "float64"])
+    columnas_numericas = df_original.select_dtypes(include=["int64", "float64"])
 
     correlaciones = (
         columnas_numericas
@@ -67,14 +68,84 @@ def generar_graficos_eda():
 
     correlaciones.columns = ["Variable", "Correlacion"]
 
+    df = traducir_valores_dashboard(df_original)
+
+    grafico_tipos = px.bar(
+        df.groupby("Type")["Total Interactions"].mean().reset_index(),
+        x="Type",
+        y="Total Interactions",
+        title="Impacto promedio según el tipo de publicación",
+        labels={
+            "Type": "Tipo de publicación",
+            "Total Interactions": "Interacciones promedio"
+        }
+    )
+
+    grafico_paid = px.bar(
+        df.groupby("Paid")["Total Interactions"].mean().reset_index(),
+        x="Paid",
+        y="Total Interactions",
+        title="Impacto promedio de publicaciones pagadas y orgánicas",
+        labels={
+            "Paid": "Tipo de publicación",
+            "Total Interactions": "Interacciones promedio"
+        }
+    )
+
+    horas = (
+        df_original
+        .groupby("Post Hour")["Total Interactions"]
+        .mean()
+        .reset_index()
+    )
+
+    horas["Hora"] = horas["Post Hour"].apply(lambda x: f"{int(x):02d}:00")
+
+    grafico_hora = px.bar(
+        horas,
+        x="Hora",
+        y="Total Interactions",
+        title="Impacto promedio según la hora de publicación",
+        labels={
+            "Hora": "Hora del día",
+            "Total Interactions": "Interacciones promedio"
+        }
+    )
+
+    orden_dias = [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo"
+    ]
+
+    grafico_dia = px.bar(
+        df.groupby("Post Weekday")["Total Interactions"]
+        .mean()
+        .reindex(orden_dias)
+        .reset_index(),
+        x="Post Weekday",
+        y="Total Interactions",
+        title="Impacto promedio por día de publicación",
+        labels={
+            "Post Weekday": "Día",
+            "Total Interactions": "Interacciones promedio"
+        }
+    )
+
     grafico_correlacion = px.bar(
         correlaciones.head(10),
         x="Variable",
         y="Correlacion",
-        title="Variables más relacionadas con Total Interactions"
+        title="Factores con mayor influencia en las interacciones",
+        labels={
+            "Variable": "Variable",
+            "Correlacion": "Correlación"
+        }
     )
-
-    resumen = generar_resumen_eda(df)
 
     return {
         "resumen": resumen,
