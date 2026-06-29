@@ -10,7 +10,7 @@ Aplicación web desarrollada con Python, Flask y XGBoost para analizar el rendim
 
 El sistema permite explorar un conjunto de datos real, entrenar un modelo predictivo y visualizar los resultados mediante un dashboard interactivo.
 
-📌 Objetivo del proyecto
+## Objetivo del proyecto
 
 Desarrollar una aplicación web que permita identificar los factores que influyen en el impacto de las publicaciones en Facebook, utilizando técnicas de análisis exploratorio de datos y un modelo de aprendizaje automático basado en XGBoost.
 
@@ -111,7 +111,8 @@ python run.py
 Abrir el navegador en:
 
 http://127.0.0.1:5000
-🔬 Flujo de procesamiento
+
+## Flujo de procesamiento
 
 1. Preparación de datos
 
